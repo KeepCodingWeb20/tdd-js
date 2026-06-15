@@ -40,6 +40,7 @@ export function maskEmail(email) {
 
   return `${local[0]}***@${domain}`;
 }
+// TODO: Testear que reemplaza la parte 'local' con *** conservando la primera letra.
 
 /**
  * Formatea un objeto Date a la cadena 'YYYY-MM-DD'.
