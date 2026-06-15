@@ -1,0 +1,18 @@
+{
+  "name": "kc-testing-js-base",
+  "version": "1.0.0",
+  "description": "Aplicación base del curso Testing con JS (TDD) de KeepCoding Web Bootcamp",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "ejs": "^6.0.1",
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}
