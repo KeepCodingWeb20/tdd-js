@@ -71,3 +71,47 @@ it('lanza un error DUPLICATE si el usuario ya esta registrado', async () => {
     ).rejects.toMatchObject({ code: 'DUPLICATE', status: 409 });
 })
 
+
+describe('register - SPY sobre hashPassword', () => {
+
+    it('llama a hashPassword con el password en texto plano', async () => {
+        const result = await register({
+            email: VALID_EMAIL,
+            password: VALID_PASSWORD
+        });
+
+        expect(hashPasswordModule.hashPassword).toHaveBeenCalled();
+        expect(hashPasswordModule.hashPassword).toHaveBeenCalledWith(VALID_PASSWORD);
+    });
+
+    it('llama a hashPassword UNA sola vez', async () => {
+        const result = await register({
+            email: VALID_EMAIL,
+            password: VALID_PASSWORD
+        });
+
+        expect(hashPasswordModule.hashPassword).toHaveBeenCalledTimes(1);
+    });
+
+});
+
+// Como verifico que el password se guarda SIEMPRE en su version HASH.
+// userRepository.create() ... recibe HASH, no PW.
+it('userRepository.create recibe el password HASHEADO, no en plano', async () => {
+    const result = await register({
+        email: VALID_EMAIL,
+        password: VALID_PASSWORD
+    });
+
+    const createCallArgs = userRepositoy.create.mock.calls[0][0];
+    // Array donde se guardan todas las llamadas.
+    // A su vez, cada llamada guarda un array con parametros.
+    /**
+     * [
+     *  [{username: 'nuevo', email: 'nuevo@example.com', password: 'password'}]
+     * ]
+     */
+    expect(createCallArgs.password).toBe(HASHED_PASSWORD);
+    expect(createCallArgs.password).not.toBe(VALID_PASSWORD);
+});
+
