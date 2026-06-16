@@ -3,6 +3,7 @@ import { validatePassword }               from '../domain/validatePassword.js';
 import { normalizeEmail, generateUsername } from '../utils/index.js';
 import * as userRepository                from '../infra/userRepository.js';
 import { hashPassword, comparePassword }  from '../infra/hashPassword.js';
+import { isLocked } from '../domain/lockoutPolicy.js';
 
 /**
  * Crea un Error enriquecido con código de negocio y status HTTP.
@@ -101,7 +102,7 @@ export async function login({ email, password }) {
 
   const now = Date.now();
   // CA3: cuenta bloqueada (lockedUntil es futuro) -> Error 423
-  if (user.lockedUntil && now < user.lockedUntil) {
+  if (isLocked({ lockedUntil: user.lockedUntil, now })) {
     throw createError('LOCKED', 'Cuenta bloqueada temporalmente');
   }
 
