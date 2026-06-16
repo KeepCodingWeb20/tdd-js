@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isLocked, registerFaliure } from '../../src/domain/lockoutPolicy.js';
+import { isLocked, LOCK_DURATION_MS, LOCK_THRESHOLD, registerFaliure } from '../../src/domain/lockoutPolicy.js';
 
 
 describe('isLocked - determina si la cuenta esta bloqueada', () => {
@@ -34,7 +34,12 @@ describe('registerFaliure - calcula cambios tras un intento fallido', () => {
         expect(changes2.failedAttempts).toBe(2);
     });
 
-    it.todo('incluye lockedUntil = now + LOCK_DURATION_MS al alcanzar el umbral');
+    it('incluye lockedUntil = now + LOCK_DURATION_MS al alcanzar el umbral', () => {
+        const now = 1_000_000;
+        const changes = registerFaliure({ failedAttempts: LOCK_THRESHOLD - 1, now });
+        expect(changes.failedAttempts).toBe(LOCK_THRESHOLD);
+        expect(changes.lockedUntil).toBe(now + LOCK_DURATION_MS);
+    });
 
 })
 
