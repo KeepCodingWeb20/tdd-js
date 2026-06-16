@@ -115,3 +115,5 @@ it('userRepository.create recibe el password HASHEADO, no en plano', async () =>
     expect(createCallArgs.password).not.toBe(VALID_PASSWORD);
 });
 
+it.todo('no llamamos a comparePassword si el usuario no existe');
+
