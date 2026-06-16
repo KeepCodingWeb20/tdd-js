@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isLocked } from '../../src/domain/lockoutPolicy.js';
+import { isLocked, registerFaliure } from '../../src/domain/lockoutPolicy.js';
 
 
 describe('isLocked - determina si la cuenta esta bloqueada', () => {
@@ -20,3 +20,21 @@ describe('isLocked - determina si la cuenta esta bloqueada', () => {
     });
 
 });
+
+describe('registerFaliure - calcula cambios tras un intento fallido', () => {
+
+    it('incrementa failedAttempts y NO incluye lockedUntil por debajo del umbral', () => {
+        const now = 1_000_000;
+        const changes = registerFaliure({ failedAttempts: 0, now });
+        const changes2 = registerFaliure({ failedAttempts: 1, now });
+
+        expect(changes.lockedUntil).toBeUndefined();
+        expect(changes.failedAttempts).toBe(1);
+        expect(changes2.lockedUntil).toBeUndefined();
+        expect(changes2.failedAttempts).toBe(2);
+    });
+
+    it.todo('incluye lockedUntil = now + LOCK_DURATION_MS al alcanzar el umbral');
+
+})
+
