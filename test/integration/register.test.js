@@ -88,4 +88,12 @@ describe('POST /register - gestión de errores', () => {
         expect(res2.body).toHaveProperty('error');
     });
 
+    it('body vacío {} devuelve 422 - ahora si!', async () => {
+        const res = await request(app)
+            .post('/register')
+            .send({});
+
+        expect(res.status).toBe(422);
+    });
+
 });

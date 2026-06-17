@@ -51,9 +51,15 @@ export async function register({ email, password }) {
     validationErrors.push('El formato del email no es válido');
   }
 
-  const { valid: passwordOk, errors: passwordErrors } = validatePassword(password);
-  if (!passwordOk) {
-    validationErrors.push(...passwordErrors);
+  if (!password) {
+    validationErrors.push('El password es obligatorio');
+  } else {
+
+    const { valid: passwordOk, errors: passwordErrors } = validatePassword(password);
+    if (!passwordOk) {
+      validationErrors.push(...passwordErrors);
+    }
+
   }
 
   if (validationErrors.length > 0) {
